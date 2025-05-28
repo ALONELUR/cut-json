@@ -11,7 +11,17 @@
     "preferences": {
       "theme": "dark",
       "notifications": true
-    }
+    },
+    "purchases": [
+      {
+        "productId": 101,
+        "quantity": 2
+      },
+      {
+        "productId": 103,
+        "quantity": 1
+      }
+    ]
   },
   "products": [
     {

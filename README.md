@@ -238,7 +238,40 @@ cut_json -file data.json \
   -keep-if-value "user.verified=true" \
   -keep-array-match "products:inStock=true" \
   -pretty
+
+# 使用JSON配置文件定义规则
+cut_json -file data.json -config rules_config.json -pretty
 ```
+
+### 使用JSON配置文件
+
+除了通过命令行参数定义规则外，还可以通过JSON配置文件定义规则：
+
+```json
+{
+  "rules": [
+    {
+      "type": "keep_path",
+      "where": "user.name"
+    },
+    {
+      "type": "keep_parent_if_value_matches",
+      "where": "user.preferences.theme",
+      "op": "equals",
+      "value": "dark"
+    },
+    {
+      "type": "keep_array_elements_if_child_value_matches",
+      "where": "products",
+      "child_path": "category",
+      "op": "equals",
+      "value": "electronics"
+    }
+  ]
+}
+```
+
+更多关于配置文件的详细信息，请参阅 [examples/config_usage.md](examples/config_usage.md)。
 
 ## 许可证
 

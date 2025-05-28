@@ -19,6 +19,7 @@ func main() {
 		paths          string
 		keepIfValue    string
 		keepArrayMatch string
+		configPath     string
 		prettyOut      bool
 	)
 
@@ -26,12 +27,13 @@ func main() {
 	flag.StringVar(&paths, "path", "", "规则1: 要保留的路径，多个路径用逗号分隔")
 	flag.StringVar(&keepIfValue, "keep-if-value", "", "规则2: 格式为'路径=值'，如果指定路径的值等于配置值，则保留父路径")
 	flag.StringVar(&keepArrayMatch, "keep-array-match", "", "规则3: 格式为'数组路径:子路径=值'，保留数组中满足子路径值为配置值的元素")
+	flag.StringVar(&configPath, "config", "", "JSON配置文件路径，用于从配置文件加载规则")
 	flag.BoolVar(&prettyOut, "pretty", false, "是否美化输出的JSON")
 	flag.Parse()
 
-	// 检查是否提供了至少一个规则
-	if paths == "" && keepIfValue == "" && keepArrayMatch == "" {
-		fmt.Println("错误: 必须提供至少一个规则参数")
+	// 检查是否提供了至少一个规则或配置文件
+	if paths == "" && keepIfValue == "" && keepArrayMatch == "" && configPath == "" {
+		fmt.Println("错误: 必须提供至少一个规则参数或配置文件")
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -55,7 +57,24 @@ func main() {
 	}
 
 	// 构建规则列表
-	rules := buildRules(paths, keepIfValue, keepArrayMatch)
+	var rules []cutjson.Rule
+
+	if configPath != "" {
+		// 从配置文件加载规则
+		rules, err = cutjson.LoadRulesFromConfig(configPath)
+		if err != nil {
+			log.Fatalf("从配置文件加载规则时出错: %v", err)
+		}
+
+		// 如果同时提供了命令行规则，则合并规则
+		if paths != "" || keepIfValue != "" || keepArrayMatch != "" {
+			cmdRules := buildRules(paths, keepIfValue, keepArrayMatch)
+			rules = append(rules, cmdRules...)
+		}
+	} else {
+		// 仅使用命令行规则
+		rules = buildRules(paths, keepIfValue, keepArrayMatch)
+	}
 
 	// 应用规则
 	result, err := cutjson.CutWithRules(jsonData, rules)
