@@ -1,0 +1,57 @@
+{
+  "user": {
+    "name": "John Doe",
+    "age": 30,
+    "address": {
+      "street": "123 Main St",
+      "city": "Anytown",
+      "zipcode": "12345"
+    },
+    "contacts": [
+      {
+        "type": "email",
+        "value": "john@example.com"
+      },
+      {
+        "type": "phone",
+        "value": "+1-555-123-4567"
+      }
+    ]
+  },
+  "orders": [
+    {
+      "id": 1001,
+      "date": "2023-01-15",
+      "items": [
+        {
+          "product": "Laptop",
+          "price": 1299.99,
+          "quantity": 1
+        },
+        {
+          "product": "Mouse",
+          "price": 25.99,
+          "quantity": 2
+        }
+      ],
+      "total": 1351.97
+    },
+    {
+      "id": 1002,
+      "date": "2023-02-20",
+      "items": [
+        {
+          "product": "Monitor",
+          "price": 349.99,
+          "quantity": 1
+        }
+      ],
+      "total": 349.99
+    }
+  ],
+  "settings": {
+    "notifications": true,
+    "theme": "dark",
+    "language": "en-US"
+  }
+}
